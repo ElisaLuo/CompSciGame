@@ -39,7 +39,13 @@ five_drawn = False
 done = False
 
 # Item setup
-
+score = 0
+combo = 0
+timer = pygame.time.get_ticks()
+startTicks = pygame.time.get_ticks()
+noteTimes = [5000, 2000, 3000, 4000]
+notePositions = [1, 2, 3, 4]
+ys = [0, 0, 0, 0]
 
 # Functions for drawing what is on screen
 def home():
@@ -80,8 +86,59 @@ def instructions(): # Prints out instructions
     screen.blit(text2, textrect2)
     screen.blit(text3, textrect3)
 
+def notesBoard():
+    # Display score and combo
+    textFont = pygame.font.Font(None, 32)
+    text1 = textFont.render('Score: ', True, (255, 255, 255))
+    text2 = textFont.render(str(score), True, (255, 255, 255))
+    text3 = textFont.render('Combo: ', True, (255, 255, 255))
+    text4 = textFont.render(str(combo), True, (255, 255, 255))
+
+    textrect1 = text1.get_rect()
+    textrect1.centerx = width*0.35
+    textrect1.centery = height*0.05
+
+    textrect2 = text2.get_rect()
+    textrect2.centerx = width*0.4
+    textrect2.centery = height*0.05
+
+    textrect3 = text3.get_rect()
+    textrect3.centerx = width*0.6
+    textrect3.centery = height*0.05
+
+    textrect4 = text4.get_rect()
+    textrect4.centerx = width*0.65
+    textrect4.centery = height*0.05
+
+    screen.blit(text1, textrect1)
+    screen.blit(text2, textrect2)
+    screen.blit(text3, textrect3)
+    screen.blit(text4, textrect4)
+
+    # Draw game board
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.3),int(height*0.1)),(int(width*0.3),int(height)),5)
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.35),int(height*0.1)),(int(width*0.35),int(height)))
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.4),int(height*0.1)),(int(width*0.4),int(height)),5)
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.45),int(height*0.1)),(int(width*0.45),int(height)))
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.5),int(height*0.1)),(int(width*0.5),int(height)),5)
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.55),int(height*0.1)),(int(width*0.55),int(height)))
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.6),int(height*0.1)),(int(width*0.6),int(height)),5)
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.65),int(height*0.1)),(int(width*0.65),int(height)))
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.7),int(height*0.1)),(int(width*0.7),int(height)),5)
+    pygame.draw.line(screen,(255, 255, 255),(int(width*0.3), int(height*0.8)), (int(width*0.7), int(height*0.8)),5)
+
+def dropNotes():
+    if(timer-startTicks >= noteTimes[0]):
+        pygame.draw.rect(screen, (255, 255, 255), (width*0.3, ys[0]+10, width*0.1, height*0.05))
+        ys[0]=ys[0]+10
+
+    if(timer-startTicks >= noteTimes[1]):
+        pygame.draw.rect(screen, (255, 255, 255), (width*0.4, ys[1]+10, width*0.1, height*0.05))
+        ys[1]=ys[1]+10
+
 def one():
-    pygame.draw.circle(screen, (255,255,255), (int(width*0.5),int(height*0.5)), 100)
+    notesBoard()
+    dropNotes()
 
 def two():
     pygame.draw.circle(screen, (255,255,0), (int(width*0.6),int(height*0.5)), 100)
@@ -105,12 +162,14 @@ while not done:
                 x,y = pygame.mouse.get_pos() # Get mouse position
                 # Switch to appropriate screen based on where the user clicked
                 if(width*0.075<x<width*0.475 and height*0.1<y<height*0.2): # Switch to screen one
+                    home_drawn = False
                     instruction_drawn = False
-                    one_drawn = not one_drawn
+                    one_drawn = True
                     two_drawn = False
                     three_drawn = False
                     four_drawn = False
                     five_drawn = False
+                    startTicks = pygame.time.get_ticks()
                 elif(width*0.075<x<width*0.475 and height*0.25<y<height*0.35): # Switch to screen two
                     instruction_drawn = False
                     one_drawn = False
@@ -157,6 +216,16 @@ while not done:
                     three_drawn = False
                     four_drawn = False
                     five_drawn = False
+            if(one_drawn):
+                if (event.key == pygame.K_ESCAPE):
+                    home_drawn = True
+                    instruction_drawn = False
+                    one_drawn = False
+                    two_drawn = False
+                    three_drawn = False
+                    four_drawn = False
+                    five_drawn = False
+                    ys = [0, 0, 0, 0]
 
                     
 
@@ -166,7 +235,9 @@ while not done:
     # Draw the screen
     if(home_drawn): home()
     if(instruction_drawn): instructions()
-    if(one_drawn): one()
+    if(one_drawn): 
+        timer = pygame.time.get_ticks()
+        one()
     if(two_drawn): two()
     if(three_drawn): three()
     if(four_drawn): four()
