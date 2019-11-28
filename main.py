@@ -43,9 +43,15 @@ score = 0
 combo = 0
 timer = pygame.time.get_ticks()
 startTicks = pygame.time.get_ticks()
-noteTimes = [5000, 2000, 3000, 4000]
-notePositions = [1, 2, 3, 4]
-ys = [0, 0, 0, 0]
+noteTimes = []
+notePositions = []
+ys = []
+for i in range(0, 1000):
+    ys.append(0)
+fTime = []
+gTime = []
+fHeight = []
+gHeight = []
 
 # Functions for drawing what is on screen
 def home():
@@ -86,8 +92,7 @@ def instructions(): # Prints out instructions
     screen.blit(text2, textrect2)
     screen.blit(text3, textrect3)
 
-def notesBoard():
-    # Display score and combo
+def notesBoard(): # Display score and combo
     textFont = pygame.font.Font(None, 32)
     text1 = textFont.render('Score: ', True, (255, 255, 255))
     text2 = textFont.render(str(score), True, (255, 255, 255))
@@ -127,14 +132,14 @@ def notesBoard():
     pygame.draw.line(screen,(255, 255, 255),(int(width*0.7),int(height*0.1)),(int(width*0.7),int(height)),5)
     pygame.draw.line(screen,(255, 255, 255),(int(width*0.3), int(height*0.8)), (int(width*0.7), int(height*0.8)),5)
 
-def dropNotes():
-    if(timer-startTicks >= noteTimes[0]):
-        pygame.draw.rect(screen, (255, 255, 255), (width*0.3, ys[0]+10, width*0.1, height*0.05))
-        ys[0]=ys[0]+10
-
-    if(timer-startTicks >= noteTimes[1]):
-        pygame.draw.rect(screen, (255, 255, 255), (width*0.4, ys[1]+10, width*0.1, height*0.05))
-        ys[1]=ys[1]+10
+def dropNotes(): # Drops notes according to initially loaded array
+    for i in range(0, len(noteTimes)):
+        fCounter = 0
+        if(timer - startTicks >= noteTimes[i]):
+            pygame.draw.rect(screen, (255, 255, 255), (width*(0.3+(notePositions[i]-1)*0.1), ys[i]+10, width*0.1, height*0.05))
+            if(notePositions[i] == 1):
+                fHeight[fCounter] = fHeight[fCounter] + 10
+            ys[i]=ys[i]+10
 
 def one():
     notesBoard()
@@ -198,7 +203,7 @@ while not done:
                     three_drawn = False
                     four_drawn = False
                     five_drawn = not five_drawn
-                elif(width*0.7<x<width*0.875 and height*0.6<y<height*0.775):
+                elif(width*0.7<x<width*0.875 and height*0.6<y<height*0.775): # Switch to instructions
                     home_drawn = False
                     instruction_drawn = True
                     one_drawn = False
@@ -206,9 +211,9 @@ while not done:
                     three_drawn = False
                     four_drawn = False
                     five_drawn = False
-        elif (event.type == pygame.KEYDOWN):
-            if(instruction_drawn):
-                if (event.key == pygame.K_ESCAPE):
+        elif (event.type == pygame.KEYDOWN): # If a key is pressed
+            if(instruction_drawn): # At the instructions page
+                if (event.key == pygame.K_ESCAPE): # Exit the instructions page
                     home_drawn = True
                     instruction_drawn = False
                     one_drawn = False
@@ -216,18 +221,35 @@ while not done:
                     three_drawn = False
                     four_drawn = False
                     five_drawn = False
-            if(one_drawn):
-                if (event.key == pygame.K_ESCAPE):
+            if(one_drawn): # At a song page
+                if (event.key == pygame.K_ESCAPE): # Exit button, reset everything
                     home_drawn = True
+                    score = 0
+                    combo = 0
                     instruction_drawn = False
                     one_drawn = False
                     two_drawn = False
                     three_drawn = False
                     four_drawn = False
                     five_drawn = False
-                    ys = [0, 0, 0, 0]
-
-                    
+                    for i in range(0, len(ys)):
+                        ys[i] = 0
+                if(event.key == pygame.K_f): # If the F key is pressed
+                    for i in range(0, len(noteTimes)):
+                        if(height*0.85 >= ys[i] >= height*0.75 and notePositions[i]==1):
+                            score = score + 100
+                if(event.key == pygame.K_g): # If the G key is pressed
+                    for i in range(0, len(noteTimes)):
+                        if(height*0.85 >= ys[i] >= height*0.75 and notePositions[i]==2):
+                            score = score + 100
+                if(event.key == pygame.K_h): # If the H key is pressed
+                    for i in range(0, len(noteTimes)):
+                        if(height*0.85 >= ys[i] >= height*0.75 and notePositions[i]==3):
+                            score = score + 100
+                if(event.key == pygame.K_j): # If the J key is pressed
+                    for i in range(0, len(noteTimes)):
+                        if(height*0.85 >= ys[i] >= height*0.75 and notePositions[i]==4):
+                            score = score + 100
 
     screen.fill((0,0,0)) # Screen color
     screen.blit(background, (0, 0))
@@ -236,6 +258,10 @@ while not done:
     if(home_drawn): home()
     if(instruction_drawn): instructions()
     if(one_drawn): 
+        noteTimes = [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+        notePositions = [1, 2, 3, 4, 1, 1, 2, 4, 3, 3]
+        fHeight = [0, 0, 0]
+        gHeight = [0]
         timer = pygame.time.get_ticks()
         one()
     if(two_drawn): two()
