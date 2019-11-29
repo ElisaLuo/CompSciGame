@@ -7,7 +7,8 @@ from os import path
 def getFile(fileName):
     return path.join(path.dirname(__file__), fileName)
 
-songOne = getFile("EN.mp3")
+# Load songs
+songOne = getFile("CatchYouCatchMe.mp3")
 
 # Initialize pygame
 pygame.init()
@@ -25,7 +26,7 @@ background = pygame.image.load(getFile("Background.jpg"))
 background = pygame.transform.scale(background, (width, height))
 
 songTitle = pygame.image.load(getFile("Song.png"))
-songTitle = pygame.transform.scale(songTitle, (int(width*0.4), int(height*0.1))) 
+songTitle = pygame.transform.scale(songTitle, (int(width*0.4), int(height*0.12))) 
 
 instructionButton = pygame.image.load(getFile("HowToPlay.png"))
 instructionButton = pygame.transform.scale(instructionButton, (int(height*0.175), int(height*0.175)))
@@ -64,7 +65,7 @@ for i in range(0, 100):
     hHeight.append(0)
     jHeight.append(0)
 
-# Functions for drawing what is on screen
+# Functions for drawing what is on home screen
 def home():
     screen.blit(songTitle, (int(width*0.075), height*0.10))
     screen.blit(songTitle, (int(width*0.075), height*0.25))
@@ -146,24 +147,23 @@ def notesBoard(): # Display score and hits
 def dropNotes(): # Drops notes according to initially loaded array
     for i in range(0, len(fTime)): # For all times where a F note is suppose to drop
         if(timer - startTicks >= fTime[i]): # Once the time is reached
-            screen.blit(note, ((width*0.35-int(height*0.075)/2), fHeight[i]+10)) # Drop image
-            fHeight[i]=fHeight[i]+10 # Drop by adding 10 to the note's height
+            screen.blit(note, ((width*0.35-int(height*0.075)/2), fHeight[i]+10)) # Draw image
+            fHeight[i]=(timer - startTicks-fTime[i])/3.25 # Drop by changing the y coordinate of the note
 
     for i in range(0, len(gTime)):
         if(timer - startTicks >= gTime[i]):
             screen.blit(note, ((width*0.45-int(height*0.075)/2), gHeight[i]+10))
-            gHeight[i]=gHeight[i]+10
+            gHeight[i]=(timer - startTicks-gTime[i])/3.25
 
     for i in range(0, len(hTime)):
         if(timer - startTicks >= hTime[i]):
             screen.blit(note, ((width*0.55-int(height*0.075)/2), hHeight[i]+10))
-            hHeight[i]=hHeight[i]+10
+            hHeight[i]=(timer - startTicks-hTime[i])/3.25
 
     for i in range(0, len(jTime)):
         if(timer - startTicks >= jTime[i]):
             screen.blit(note, ((width*0.65-int(height*0.075)/2), jHeight[i]+10))
-            jHeight[i]=jHeight[i]+10
-
+            jHeight[i]=(timer - startTicks-jTime[i])/3.25
 def one():
     notesBoard()
     dropNotes()
@@ -185,12 +185,11 @@ def five():
     dropNotes()
 
 while not done:
-    for event in pygame.event.get(): # Key press events
-        if (event.type == pygame.QUIT):
-            done = True
-        elif (event.type == pygame.MOUSEBUTTONDOWN):
-            # If the mouse button is clicked when at home screen
-            if(home_drawn):
+    for event in pygame.event.get(): # Get user input events
+        if (event.type == pygame.QUIT): # If user wants to exit
+            done = True # Exit
+        elif (event.type == pygame.MOUSEBUTTONDOWN): # If user clicks something
+            if(home_drawn): # At the home screen
                 x,y = pygame.mouse.get_pos() # Get mouse position
                 # Switch to appropriate screen based on where the user clicked
                 if(width*0.075<x<width*0.475 and height*0.1<y<height*0.2): # Switch to screen one
@@ -252,7 +251,7 @@ while not done:
                     five_drawn = False
         elif (event.type == pygame.KEYDOWN): # If a key is pressed
             if(instruction_drawn): # At the instructions page
-                if (event.key == pygame.K_ESCAPE): # Exit the instructions page
+                if (event.key == pygame.K_ESCAPE): # Exit the instructions page if ESC pressed
                     home_drawn = True
                     instruction_drawn = False
                     one_drawn = False
@@ -262,6 +261,7 @@ while not done:
                     five_drawn = False
             if(one_drawn or two_drawn or three_drawn or four_drawn or five_drawn): # At a song page
                 if (event.key == pygame.K_ESCAPE): # Exit, reset everything
+                    pygame.mixer.music.stop()
                     home_drawn = True
                     score = 0
                     hits = 0
@@ -280,21 +280,25 @@ while not done:
                     for i in range(0, len(jHeight)):
                         jHeight[i] = 0
                 if(event.key == pygame.K_f): # If the F key is pressed
+                    #print("f", timer - startTicks-2000)
                     for i in range(0, len(fTime)):
-                        if(height*0.85 >= fHeight[i] >= height*0.75):
-                            hits = hits + 1
-                            score = score + 100 + hits*5
+                        if(height*0.85 >= fHeight[i] >= height*0.75): # If the note is hit in the desired range
+                            hits = hits + 1 # Add 1 to the number of hits
+                            score = score + 100 + hits*5 # Calculate score
                 if(event.key == pygame.K_g): # If the G key is pressed
+                    #print("g",timer - startTicks-2000)
                     for i in range(0, len(gTime)):
                         if(height*0.85 >= gHeight[i] >= height*0.75):
                             hits = hits + 1
                             score = score + 100 + hits*5
                 if(event.key == pygame.K_h): # If the H key is pressed
+                    #print("h", timer - startTicks-2000)
                     for i in range(0, len(hTime)):
                         if(height*0.85 >= hHeight[i] >= height*0.75):
                             hits = hits + 1
                             score = score + 100 + hits*5
                 if(event.key == pygame.K_j): # If the J key is pressed
+                    #print("j", timer - startTicks-2000)
                     for i in range(0, len(jTime)):
                         if(height*0.85 >= jHeight[i] >= height*0.75):
                             hits = hits + 1
@@ -307,10 +311,10 @@ while not done:
     if(home_drawn): home()
     if(instruction_drawn): instructions()
     if(one_drawn): 
-        fTime = [1000, 2000, 3000]
-        gTime = [2000, 4000, 4500]
-        hTime = [3500, 6000, 8000]
-        jTime = [5000, 7000, 8000]
+        fTime = [1281, 1932, 3696, 5531]
+        gTime = [1932, 2856, 4197, 6004]
+        hTime = [5497, 6993, 7500]
+        jTime = [6546, 6993, 7500]
         timer = pygame.time.get_ticks()
         one()
     if(two_drawn): 
@@ -335,14 +339,14 @@ while not done:
         timer = pygame.time.get_ticks()
         four()
     if(five_drawn): 
-        fTime = [1000, 2000, 3000]
-        gTime = [2000, 4000, 4500]
-        hTime = [3500, 6000, 8000]
-        jTime = [5000, 7000, 8000]
+        fTime = [1281, 1932, 3696, 5531]
+        gTime = [1932, 2856, 4197, 6004]
+        hTime = [5497, 6993, 7500]
+        jTime = [6546, 6993, 7500]
         timer = pygame.time.get_ticks()
         five()
     
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(120)
 
 pygame.quit()
