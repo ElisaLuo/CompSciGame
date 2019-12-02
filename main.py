@@ -34,6 +34,9 @@ instructionButton = pygame.transform.scale(instructionButton, (int(height*0.175)
 note = pygame.image.load(getFile("Note.png"))
 note = pygame.transform.scale(note, (int(height*0.075), int(height*0.075)))
 
+shine = pygame.image.load(getFile("Shine.png"))
+shine = pygame.transform.scale(shine, (int(width*0.1), int(height*0.9)))
+
 # If the different screens are drawn
 home_drawn = True
 instruction_drawn = False
@@ -50,6 +53,16 @@ score = 0
 hits = 0
 timer = pygame.time.get_ticks()
 startTicks = pygame.time.get_ticks()
+
+fShine = False
+gShine = False
+hShine = False
+jShine = False
+
+fCounter = 0
+gCounter = 0
+hCounter = 0
+jCounter = 0
 
 fTime = []
 gTime = []
@@ -148,39 +161,23 @@ def dropNotes(): # Drops notes according to initially loaded array
     for i in range(0, len(fTime)): # For all times where a F note is suppose to drop
         if(timer - startTicks >= fTime[i]): # Once the time is reached
             screen.blit(note, ((width*0.35-int(height*0.075)/2), fHeight[i]+10)) # Draw image
-            fHeight[i]=(timer - startTicks-fTime[i])/3.25 # Drop by changing the y coordinate of the note
+            fHeight[i]=(timer - startTicks-fTime[i])*(height/720)/3.25 # Drop by changing the y coordinate of the note
 
     for i in range(0, len(gTime)):
         if(timer - startTicks >= gTime[i]):
             screen.blit(note, ((width*0.45-int(height*0.075)/2), gHeight[i]+10))
-            gHeight[i]=(timer - startTicks-gTime[i])/3.25
+            gHeight[i]=(timer - startTicks-gTime[i])*(height/720)/3.25
 
     for i in range(0, len(hTime)):
         if(timer - startTicks >= hTime[i]):
             screen.blit(note, ((width*0.55-int(height*0.075)/2), hHeight[i]+10))
-            hHeight[i]=(timer - startTicks-hTime[i])/3.25
+            hHeight[i]=(timer - startTicks-hTime[i])*(height/720)/3.25
 
     for i in range(0, len(jTime)):
         if(timer - startTicks >= jTime[i]):
             screen.blit(note, ((width*0.65-int(height*0.075)/2), jHeight[i]+10))
-            jHeight[i]=(timer - startTicks-jTime[i])/3.25
-def one():
-    notesBoard()
-    dropNotes()
-
-def two():
-    notesBoard()
-    dropNotes()
-
-def three():
-    notesBoard()
-    dropNotes()
-
-def four():
-    notesBoard()
-    dropNotes()
-
-def five():
+            jHeight[i]=(timer - startTicks-jTime[i])*(height/720)/3.25
+def drawGame():
     notesBoard()
     dropNotes()
 
@@ -280,72 +277,108 @@ while not done:
                     for i in range(0, len(jHeight)):
                         jHeight[i] = 0
                 if(event.key == pygame.K_f): # If the F key is pressed
-                    #print("f", timer - startTicks-2000)
+                    print("f", timer - startTicks-2000)
                     for i in range(0, len(fTime)):
                         if(height*0.85 >= fHeight[i] >= height*0.75): # If the note is hit in the desired range
                             hits = hits + 1 # Add 1 to the number of hits
                             score = score + 100 + hits*5 # Calculate score
                 if(event.key == pygame.K_g): # If the G key is pressed
-                    #print("g",timer - startTicks-2000)
+                    print("g",timer - startTicks-2000)
                     for i in range(0, len(gTime)):
                         if(height*0.85 >= gHeight[i] >= height*0.75):
                             hits = hits + 1
                             score = score + 100 + hits*5
                 if(event.key == pygame.K_h): # If the H key is pressed
-                    #print("h", timer - startTicks-2000)
+                    print("h", timer - startTicks-2000)
                     for i in range(0, len(hTime)):
                         if(height*0.85 >= hHeight[i] >= height*0.75):
                             hits = hits + 1
                             score = score + 100 + hits*5
                 if(event.key == pygame.K_j): # If the J key is pressed
-                    #print("j", timer - startTicks-2000)
+                    print("j", timer - startTicks-2000)
                     for i in range(0, len(jTime)):
                         if(height*0.85 >= jHeight[i] >= height*0.75):
                             hits = hits + 1
                             score = score + 100 + hits*5
 
+    pressed = pygame.key.get_pressed()
+    if pressed[pygame.K_f]: 
+        fShine = True
+    if pressed[pygame.K_g]: 
+        gShine = True
+    if pressed[pygame.K_h]: 
+        hShine = True
+    if pressed[pygame.K_j]: 
+        jShine = True
+    
     screen.fill((0,0,0)) # Screen color
     screen.blit(background, (0, 0))
-
+    
     # Draw the screen
     if(home_drawn): home()
     if(instruction_drawn): instructions()
     if(one_drawn): 
         fTime = [1281, 1932, 3696, 5531]
         gTime = [1932, 2856, 4197, 6004]
-        hTime = [5497, 6993, 7500]
+        hTime = [4701, 5497, 6993, 7500]
         jTime = [6546, 6993, 7500]
         timer = pygame.time.get_ticks()
-        one()
+        drawGame() 
     if(two_drawn): 
         fTime = [1000, 2000, 3000]
         gTime = [2000, 4000, 4500]
         hTime = [3500, 6000, 8000]
         jTime = [5000, 7000, 8000]
         timer = pygame.time.get_ticks()
-        two()
+        drawGame()
     if(three_drawn): 
         fTime = [1000, 2000, 3000]
         gTime = [2000, 4000, 4500]
         hTime = [3500, 6000, 8000]
         jTime = [5000, 7000, 8000]
         timer = pygame.time.get_ticks()
-        three()
+        drawGame()
     if(four_drawn): 
         fTime = [1000, 2000, 3000]
         gTime = [2000, 4000, 4500]
         hTime = [3500, 6000, 8000]
         jTime = [5000, 7000, 8000]
         timer = pygame.time.get_ticks()
-        four()
+        drawGame()
     if(five_drawn): 
         fTime = [1281, 1932, 3696, 5531]
         gTime = [1932, 2856, 4197, 6004]
         hTime = [5497, 6993, 7500]
         jTime = [6546, 6993, 7500]
         timer = pygame.time.get_ticks()
-        five()
+        drawGame()
     
+    if(one_drawn or two_drawn or three_drawn or four_drawn or five_drawn):
+        if(fShine):
+            fCounter = fCounter + 1
+            screen.blit(shine, (int(width*0.3), int(height*0.1)))
+            if(fCounter >= 4):
+                fShine = False
+                fCounter = 0
+        if(gShine):
+            gCounter = gCounter + 1
+            screen.blit(shine, (int(width*0.4), int(height*0.1)))
+            if(gCounter >= 4):
+                gShine = False
+                gCounter = 0
+        if(hShine):
+            hCounter = hCounter + 1
+            screen.blit(shine, (int(width*0.5), int(height*0.1)))
+            if(hCounter >= 4):
+                hShine = False
+                hCounter = 0
+        if(jShine):
+            jCounter = jCounter + 1
+            screen.blit(shine, (int(width*0.6), int(height*0.1)))
+            if(jCounter >= 4):
+                jShine = False
+                jCounter = 0
+
     pygame.display.flip()
     clock.tick(120)
 
