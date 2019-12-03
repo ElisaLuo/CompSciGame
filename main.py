@@ -159,24 +159,24 @@ def notesBoard(): # Display score and hits
 
 def dropNotes(): # Drops notes according to initially loaded array
     for i in range(0, len(fTime)): # For all times where a F note is suppose to drop
-        if(timer - startTicks >= fTime[i]): # Once the time is reached
+        if(timer - startTicks >= fTime[i]+50): # Once the time is reached
             screen.blit(note, ((width*0.35-int(height*0.075)/2), fHeight[i]+10)) # Draw image
-            fHeight[i]=(timer - startTicks-fTime[i])*(height/720)/3.25 # Drop by changing the y coordinate of the note
+            fHeight[i]=((timer - startTicks-fTime[i])*(height/720)/3.25)-50 # Drop by changing the y coordinate of the note
 
     for i in range(0, len(gTime)):
-        if(timer - startTicks >= gTime[i]):
+        if(timer - startTicks >= gTime[i]+50):
             screen.blit(note, ((width*0.45-int(height*0.075)/2), gHeight[i]+10))
-            gHeight[i]=(timer - startTicks-gTime[i])*(height/720)/3.25
+            gHeight[i]=((timer - startTicks-gTime[i])*(height/720)/3.25)-50
 
     for i in range(0, len(hTime)):
-        if(timer - startTicks >= hTime[i]):
+        if(timer - startTicks >= hTime[i]+50):
             screen.blit(note, ((width*0.55-int(height*0.075)/2), hHeight[i]+10))
-            hHeight[i]=(timer - startTicks-hTime[i])*(height/720)/3.25
+            hHeight[i]=((timer - startTicks-hTime[i])*(height/720)/3.25)-50
 
     for i in range(0, len(jTime)):
-        if(timer - startTicks >= jTime[i]):
+        if(timer - startTicks >= jTime[i]+50):
             screen.blit(note, ((width*0.65-int(height*0.075)/2), jHeight[i]+10))
-            jHeight[i]=(timer - startTicks-jTime[i])*(height/720)/3.25
+            jHeight[i]=((timer - startTicks-jTime[i])*(height/720)/3.25)-50
 def drawGame():
     notesBoard()
     dropNotes()
@@ -277,25 +277,25 @@ while not done:
                     for i in range(0, len(jHeight)):
                         jHeight[i] = 0
                 if(event.key == pygame.K_f): # If the F key is pressed
-                    print("f", timer - startTicks-2000)
+                    #("f", timer - startTicks-2000)
                     for i in range(0, len(fTime)):
                         if(height*0.85 >= fHeight[i] >= height*0.75): # If the note is hit in the desired range
                             hits = hits + 1 # Add 1 to the number of hits
                             score = score + 100 + hits*5 # Calculate score
                 if(event.key == pygame.K_g): # If the G key is pressed
-                    print("g",timer - startTicks-2000)
+                    #print("g",timer - startTicks-2000)
                     for i in range(0, len(gTime)):
                         if(height*0.85 >= gHeight[i] >= height*0.75):
                             hits = hits + 1
                             score = score + 100 + hits*5
                 if(event.key == pygame.K_h): # If the H key is pressed
-                    print("h", timer - startTicks-2000)
+                    #print("h", timer - startTicks-2000)
                     for i in range(0, len(hTime)):
                         if(height*0.85 >= hHeight[i] >= height*0.75):
                             hits = hits + 1
                             score = score + 100 + hits*5
                 if(event.key == pygame.K_j): # If the J key is pressed
-                    print("j", timer - startTicks-2000)
+                    #print("j", timer - startTicks-2000)
                     for i in range(0, len(jTime)):
                         if(height*0.85 >= jHeight[i] >= height*0.75):
                             hits = hits + 1
@@ -318,10 +318,10 @@ while not done:
     if(home_drawn): home()
     if(instruction_drawn): instructions()
     if(one_drawn): 
-        fTime = [1281, 1932, 3696, 5531]
-        gTime = [1932, 2856, 4197, 6004]
-        hTime = [4701, 5497, 6993, 7500]
-        jTime = [6546, 6993, 7500]
+        fTime = [1281, 1932, 3696, 5531, 8492, 11290, 13516, 14500, 18590, 20498, 24236, 26145, 28637, 31457, 33316, 34792, 36208]
+        gTime = [1932, 2856, 4197, 6004, 9790, 11570, 12781, 14851, 16770, 22128, 22688, 27946, 29110, 31899, 33823, 34299, 36580, 38042]
+        hTime = [4701, 5497, 6993, 7500, 9415, 11879, 13955, 15934, 17891, 19973, 21594, 23565, 25418, 27206, 29595, 31017, 32845, 35313, 35783, 37568]
+        jTime = [6546, 6993, 7500, 8994, 10242, 10750, 12173, 13241, 15372, 17400, 19291, 21098, 23147, 24902, 26733, 30117, 30517, 32426, 37087]
         timer = pygame.time.get_ticks()
         drawGame() 
     if(two_drawn): 
@@ -380,6 +380,6 @@ while not done:
                 jCounter = 0
 
     pygame.display.flip()
-    clock.tick(120)
+    clock.tick(60)
 
 pygame.quit()
