@@ -9,6 +9,7 @@ def getFile(fileName):
 
 # Load songs
 songOne = getFile("CatchYouCatchMe.mp3")
+songTwo = getFile("Unravel.mp3")
 
 # Initialize pygame
 pygame.init()
@@ -202,6 +203,9 @@ while not done:
                     five_drawn = False
                     startTicks = pygame.time.get_ticks()
                 elif(width*0.075<x<width*0.475 and height*0.25<y<height*0.35): # Switch to screen two
+                    pygame.mixer.music.load(songTwo)
+                    pygame.mixer.music.play()
+                    pygame.event.wait()
                     home_drawn = False
                     instruction_drawn = False
                     one_drawn = False
@@ -277,7 +281,7 @@ while not done:
                     for i in range(0, len(jHeight)):
                         jHeight[i] = 0
                 if(event.key == pygame.K_f): # If the F key is pressed
-                    #("f", timer - startTicks-2000)
+                    #print("f", timer - startTicks-2000)
                     for i in range(0, len(fTime)):
                         if(height*0.85 >= fHeight[i] >= height*0.75): # If the note is hit in the desired range
                             hits = hits + 1 # Add 1 to the number of hits
@@ -318,10 +322,10 @@ while not done:
     if(home_drawn): home()
     if(instruction_drawn): instructions()
     if(one_drawn): 
-        fTime = [1281, 1932, 3696, 5531, 8492, 11290, 13516, 14500, 18590, 20498, 24236, 26145, 28637, 31457, 33316, 34792, 36208]
-        gTime = [1932, 2856, 4197, 6004, 9790, 11570, 12781, 14851, 16770, 22128, 22688, 27946, 29110, 31899, 33823, 34299, 36580, 38042]
-        hTime = [4701, 5497, 6993, 7500, 9415, 11879, 13955, 15934, 17891, 19973, 21594, 23565, 25418, 27206, 29595, 31017, 32845, 35313, 35783, 37568]
-        jTime = [6546, 6993, 7500, 8994, 10242, 10750, 12173, 13241, 15372, 17400, 19291, 21098, 23147, 24902, 26733, 30117, 30517, 32426, 37087]
+        fTime = [1281, 1932, 3696, 5531, 8492, 11290, 13516, 14500, 18590, 20498, 24236, 26145, 28637, 31457, 33316, 34792, 36208, 38668, 42463, 42906, 46168, 48018, 48470, 50812, 51263, 53637, 54105, 55056, 57221, 57666, 59135, 61106, 61550, 64463, 65066, 68806, 69384, 71565]
+        gTime = [1932, 2856, 4197, 6004, 9790, 11570, 12781, 14851, 16770, 22128, 22688, 27946, 29110, 31899, 33823, 34299, 36580, 38042, 39099, 41497, 41898, 43408, 43855, 47088, 49930, 52670, 56016, 56939, 58087, 60069, 62024, 62431, 65640, 66139, 70597]
+        hTime = [4701, 5497, 6993, 7500, 9415, 11879, 13955, 15934, 17891, 19973, 21594, 23565, 25418, 27206, 29595, 31017, 32845, 35313, 35783, 37568, 40560, 40989, 44298, 44693, 47513, 50337, 53144, 55595, 56497, 59618, 63581, 64019, 67717, 68238, 71114]
+        jTime = [6546, 6993, 7500, 8994, 10242, 10750, 12173, 13241, 15372, 17400, 19291, 21098, 23147, 24902, 26733, 30117, 30517, 32426, 37087, 39587, 40035, 45158, 45691, 46625, 49051, 49530, 51767, 52172, 54613, 58599, 60627, 62759, 63171, 66678, 67189, 70037, 72175]
         timer = pygame.time.get_ticks()
         drawGame() 
     if(two_drawn): 
