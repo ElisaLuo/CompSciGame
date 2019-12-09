@@ -10,6 +10,7 @@ def getFile(fileName):
 # Load songs
 songOne = getFile("CatchYouCatchMe.mp3")
 songTwo = getFile("Unravel.mp3")
+songThree = getFile("YumeSakura.mp3")
 
 # Initialize pygame
 pygame.init()
@@ -44,8 +45,6 @@ instruction_drawn = False
 one_drawn = False
 two_drawn = False
 three_drawn = False
-four_drawn = False
-five_drawn = False
 
 done = False
 
@@ -82,9 +81,7 @@ for i in range(0, 100):
 # Functions for drawing what is on home screen
 def home():
     screen.blit(songTitle, (int(width*0.075), height*0.10))
-    screen.blit(songTitle, (int(width*0.075), height*0.25))
     screen.blit(songTitle, (int(width*0.075), height*0.40))
-    screen.blit(songTitle, (int(width*0.075), height*0.55))
     screen.blit(songTitle, (int(width*0.075), height*0.70))
     screen.blit(instructionButton, (int(width*0.7), height*0.6))
 
@@ -160,24 +157,25 @@ def notesBoard(): # Display score and hits
 
 def dropNotes(): # Drops notes according to initially loaded array
     for i in range(0, len(fTime)): # For all times where a F note is suppose to drop
-        if(timer - startTicks >= fTime[i]+50): # Once the time is reached
+        if(timer - startTicks >= fTime[i]+75): # Once the time is reached
             screen.blit(note, ((width*0.35-int(height*0.075)/2), fHeight[i]+10)) # Draw image
             fHeight[i]=((timer - startTicks-fTime[i])*(height/720)/3.25)-50 # Drop by changing the y coordinate of the note
 
     for i in range(0, len(gTime)):
-        if(timer - startTicks >= gTime[i]+50):
+        if(timer - startTicks >= gTime[i]+75):
             screen.blit(note, ((width*0.45-int(height*0.075)/2), gHeight[i]+10))
             gHeight[i]=((timer - startTicks-gTime[i])*(height/720)/3.25)-50
 
     for i in range(0, len(hTime)):
-        if(timer - startTicks >= hTime[i]+50):
+        if(timer - startTicks >= hTime[i]+75):
             screen.blit(note, ((width*0.55-int(height*0.075)/2), hHeight[i]+10))
             hHeight[i]=((timer - startTicks-hTime[i])*(height/720)/3.25)-50
 
     for i in range(0, len(jTime)):
-        if(timer - startTicks >= jTime[i]+50):
+        if(timer - startTicks >= jTime[i]+75):
             screen.blit(note, ((width*0.65-int(height*0.075)/2), jHeight[i]+10))
             jHeight[i]=((timer - startTicks-jTime[i])*(height/720)/3.25)-50
+
 def drawGame():
     notesBoard()
     dropNotes()
@@ -199,10 +197,8 @@ while not done:
                     one_drawn = True
                     two_drawn = False
                     three_drawn = False
-                    four_drawn = False
-                    five_drawn = False
                     startTicks = pygame.time.get_ticks()
-                elif(width*0.075<x<width*0.475 and height*0.25<y<height*0.35): # Switch to screen two
+                elif(width*0.075<x<width*0.475 and height*0.4<y<height*0.5): # Switch to screen two
                     pygame.mixer.music.load(songTwo)
                     pygame.mixer.music.play()
                     pygame.event.wait()
@@ -211,35 +207,16 @@ while not done:
                     one_drawn = False
                     two_drawn = not two_drawn
                     three_drawn = False
-                    four_drawn = False
-                    five_drawn = False
                     startTicks = pygame.time.get_ticks()
-                elif(width*0.075<x<width*0.475 and height*0.4<y<height*0.5): # Switch to screen three
+                elif(width*0.075<x<width*0.475 and height*0.7<y<height*0.8): # Switch to screen three
+                    pygame.mixer.music.load(songThree)
+                    pygame.mixer.music.play()
+                    pygame.event.wait()
                     home_drawn = False
                     instruction_drawn = False
                     one_drawn = False
                     two_drawn = False
                     three_drawn = not three_drawn
-                    four_drawn = False
-                    five_drawn = False
-                    startTicks = pygame.time.get_ticks()
-                elif(width*0.075<x<width*0.475 and height*0.55<y<height*0.65): # Switch to screen four
-                    home_drawn = False
-                    instruction_drawn = False
-                    one_drawn = False
-                    two_drawn = False
-                    three_drawn = False
-                    four_drawn = not four_drawn
-                    five_drawn = False
-                    startTicks = pygame.time.get_ticks()
-                elif(width*0.075<x<width*0.475 and height*0.7<y<height*0.8): # Switch to screen five
-                    home_drawn = False
-                    instruction_drawn = False
-                    one_drawn = False
-                    two_drawn = False
-                    three_drawn = False
-                    four_drawn = False
-                    five_drawn = not five_drawn
                     startTicks = pygame.time.get_ticks()
                 elif(width*0.7<x<width*0.875 and height*0.6<y<height*0.775): # Switch to instructions
                     home_drawn = False
@@ -248,8 +225,6 @@ while not done:
                     one_drawn = False
                     two_drawn = False
                     three_drawn = False
-                    four_drawn = False
-                    five_drawn = False
         elif (event.type == pygame.KEYDOWN): # If a key is pressed
             if(instruction_drawn): # At the instructions page
                 if (event.key == pygame.K_ESCAPE): # Exit the instructions page if ESC pressed
@@ -258,9 +233,7 @@ while not done:
                     one_drawn = False
                     two_drawn = False
                     three_drawn = False
-                    four_drawn = False
-                    five_drawn = False
-            if(one_drawn or two_drawn or three_drawn or four_drawn or five_drawn): # At a song page
+            if(one_drawn or two_drawn or three_drawn): # At a song page
                 if (event.key == pygame.K_ESCAPE): # Exit, reset everything
                     pygame.mixer.music.stop()
                     home_drawn = True
@@ -270,8 +243,6 @@ while not done:
                     one_drawn = False
                     two_drawn = False
                     three_drawn = False
-                    four_drawn = False
-                    five_drawn = False
                     for i in range(0, len(fHeight)):
                         fHeight[i] = 0
                     for i in range(0, len(gHeight)):
@@ -329,35 +300,21 @@ while not done:
         timer = pygame.time.get_ticks()
         drawGame() 
     if(two_drawn): 
-        fTime = [1000, 2000, 3000]
-        gTime = [2000, 4000, 4500]
-        hTime = [3500, 6000, 8000]
-        jTime = [5000, 7000, 8000]
+        fTime = [1831, 5199, 7846, 10123, 10319, 11593, 13677, 15814, 17365, 18849, 19532, 20947, 22976, 24334, 26197, 27480, 28417, 29732, 30933, 31952, 33423, 34477, 35600, 36623, 37202, 38131, 38749, 40612, 42224, 43945, 44576, 46524, 48069, 48440, 48608, 49654, 49825, 51444, 53301, 55270, 56307, 56720, 58622, 59922, 61751, 62846, 64778, 65334, 67136, 67326, 69722, 71142, 71486, 73009, 74415, 76123, 77754, 79053, 83282]
+        gTime = [2283, 4511, 6021, 8069, 10911, 12431, 14621, 16232, 16632, 18181, 19904, 22026, 23438, 24892, 25692, 26787, 28726, 30110, 31305, 32454, 33834, 35043, 35226, 36260, 37608, 38495, 39843, 41073, 42954, 45130, 47484, 47634, 48925, 50423, 51867, 53893, 54328, 55677, 57117, 57597, 59086, 60445, 62149, 64027, 66213, 67903, 69026, 70523, 71909, 73700, 75047, 75465, 77045, 78449, 82413]
+        hTime = [1430, 2283, 4283, 6484, 7063, 8963, 10694, 11957, 14190, 15357, 17206, 19904, 21545, 23294, 26604, 27063, 28059, 29285, 29538, 30305, 30561, 31139, 31770, 32183, 33181, 34112, 34247, 35482, 36415, 37365, 38332, 39504, 39681, 40887, 42694, 45576, 47887, 49207, 49386, 50693, 51595, 52752, 55461, 58238, 58376, 59457, 60790, 61196, 62373, 62599, 64302, 66013, 66679, 68356, 68904, 69269, 69440, 70727, 72851, 73262, 73466, 74741, 76491, 76807, 78630, 81446]
+        jTime = [945, 1831, 2950, 3526, 3758, 5597, 7292, 9337, 11339, 13006, 13432, 14826, 16232, 16655, 17924, 19491, 20779, 22268, 23902, 25483, 27800, 28934, 29905, 30730, 31573, 32669, 32814, 33730, 34722, 35893, 36028, 36887, 36991, 37805, 37949, 29048, 40080, 40375, 41638, 42076, 43748, 46659, 48805, 50174, 51068, 51243, 52047, 54791, 55052, 55968, 58768, 60132, 61920, 63554, 63687, 67632, 69953, 70148, 70303, 72400, 72541, 73888, 74189, 75970, 78221, 79603]
         timer = pygame.time.get_ticks()
         drawGame()
     if(three_drawn): 
-        fTime = [1000, 2000, 3000]
-        gTime = [2000, 4000, 4500]
-        hTime = [3500, 6000, 8000]
-        jTime = [5000, 7000, 8000]
-        timer = pygame.time.get_ticks()
-        drawGame()
-    if(four_drawn): 
-        fTime = [1000, 2000, 3000]
-        gTime = [2000, 4000, 4500]
-        hTime = [3500, 6000, 8000]
-        jTime = [5000, 7000, 8000]
-        timer = pygame.time.get_ticks()
-        drawGame()
-    if(five_drawn): 
-        fTime = [1281, 1932, 3696, 5531]
-        gTime = [1932, 2856, 4197, 6004]
-        hTime = [5497, 6993, 7500]
-        jTime = [6546, 6993, 7500]
+        fTime = [1169, 3537, 4002, 5997, 8337, 10772, 12351, 13683, 13975, 14147, 15096, 16395, 17167, 18019, 18193, 19358, 20333, 20555, 21527, 22529, 23474, 24682, 25169, 26928, 27340, 28443, 30068, 30496, 31714, 33762, 34697, 35708, 36793, 37785, 38781, 40659, 41942, 43325, 44373, 45975, 47546, 49162, 50556]
+        gTime = [1618, 4417, 6387, 6803, 9527, 11567, 14343, 15730, 16838, 17923, 18545, 19668, 20820, 21876, 22941, 23933, 25497, 27719, 28126, 29531, 30713, 31962, 32138, 32779, 34021, 35160, 36079, 36436, 37108, 38134, 39247, 39564, 40842, 42309, 42674, 43722, 46416, 46544, 48149, 49558]
+        hTime = [2298, 2720, 5617, 7557, 7990, 9953, 10378, 12018, 13324, 13479, 14895, 16013, 16147, 17008, 17758, 18467, 19079, 19216, 20134, 21156, 21289, 22122, 22277, 23152, 23294, 24168, 24424, 25376, 26523, 28294, 29660, 31481, 32346, 32925, 33320, 34893, 35908, 37242, 37420, 38376, 38559, 40186, 40424, 41576, 43153, 43325, 43543, 44792, 45195, 46796, 47926, 48975, 50252]
+        jTime = [3156, 4809, 5230, 7161, 8721, 9129, 11199, 12682, 12962, 14505, 14649, 15325, 15502, 15668, 16569, 16708, 17734, 17554, 18716, 18868, 19784, 19920, 20953, 21714, 22682, 23702, 24933, 25818, 26195, 28828, 29302, 31133, 31302, 32567, 34383, 34528, 35330, 35514, 36937, 37988, 39970, 41252, 42989, 43924, 45547, 47177, 48473, 48620, 48785, 49937]
         timer = pygame.time.get_ticks()
         drawGame()
     
-    if(one_drawn or two_drawn or three_drawn or four_drawn or five_drawn):
+    if(one_drawn or two_drawn or three_drawn):
         if(fShine):
             fCounter = fCounter + 1
             screen.blit(shine, (int(width*0.3), int(height*0.1)))
