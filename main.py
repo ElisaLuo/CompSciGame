@@ -17,8 +17,8 @@ pygame.init()
 pygame.mixer.init()
 
 # Get display width and height and set screen to it
-width = int(pygame.display.Info().current_w/1.5) # Screen zoom scale (1.5)
-height = int(pygame.display.Info().current_h/1.5)
+width = int(pygame.display.Info().current_w)
+height = int(pygame.display.Info().current_h)
 screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 pygame.display.set_caption("Pygame Project") # Set display name
 clock = pygame.time.Clock()
