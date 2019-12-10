@@ -36,4 +36,4 @@ git clone https://github.com/ElisaLuo/CompSciGame.git
 
     - Note: all progress of the song will be erased
 
-** The creator of this game does not own any content of this game, including the graphics and music. **
+** The creator of this game does not own any content of this game, including the graphics and music. :3**
